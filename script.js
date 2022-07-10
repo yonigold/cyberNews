@@ -162,29 +162,32 @@ const url1 =
 
 const req1 = new Request(url1);
 
-const getNews = async (catg) => {
-  const response = await fetch(catg);
-  const data = await response.json();
-  const articles = data.articles;
-  for (let i = 0; i < articles.length; i++) {
-    const article = articles[i];
-    const articleEl = document.createElement("div");
-    articleEl.classList.add("card");
-    articleEl.innerHTML = `
-        <div class='row'>
-        <div class="col">
-        <div class="card-body">
-            <h2 class="card-title">${article.title}</h2>
-            <img class="image" src="${article.urlToImage}">
-            <p class="card-text lead">${article.description}</p>
-            <a class="btn btn-primary" href="${article.url}">Read More</a>
-            </div>
-            </div>
-            </div>
-        `;
+const getNews = () => {
+  fetch(req1)
+    .then((response) => response.json())
+    .then((data) => {
+      const items = data.articles;
+      let html = ``;
+      items.forEach((el) => {
+        const title = el.title;
+        const link = el.url;
+        const desc = el.description;
+        const img = el.urlToImage;
 
-    container.appendChild(articleEl);
-  }
+        html += `
+        <div class="card">
+
+            <div class="card-body">
+                <h5 class="card-title">${title}</h5>
+                <img src="${img}" alt="${title}" class="img-fluid">
+                <p class="card-text">${desc}</p>
+                <a href="${link}" class="btn btn-primary">Read More</a>
+            </div>
+        </div>
+        `;
+      });
+      container.innerHTML = html;
+    });
 };
 
 getNews(req1);
