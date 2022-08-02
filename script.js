@@ -35,10 +35,14 @@ const australiaUrl = "https://www.cyber.gov.au/acsc/view-all-content/news/rss";
 const csaUrl = "https://www.csa.gov.sg/Content/RSS-Feed";
 
 const getRss = (url) => {
+  // make the function async
+
   fetch(url)
     .then((response) => response.text())
     .then((str) => new window.DOMParser().parseFromString(str, "text/xml"))
     .then((data) => {
+      // can be entry or item depending on the url
+
       const items = data.querySelectorAll("item");
 
       let html = ``;
@@ -93,101 +97,34 @@ const getRss2 = (url) => {
     });
 };
 
-ncscBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  getRss(nscsUrl);
+const data = [
+  { name: ncscBtn, url: nscsUrl },
+  { name: ccnBtn, url: ccnUrl },
+  { name: nukibBtn, url: nukibUrl },
+  { name: riaBtn, url: riaUrl },
+  { name: cfcsBtn, url: cfcsUrl },
+  { name: dnscBtn, url: dnscUrl },
+  { name: ncsnNlBtn, url: ncscNlUrl },
+  { name: belgiumBtn, url: belgiumUrl },
+  { name: australiaBtn, url: australiaUrl },
+  { name: csaBtn, url: csaUrl },
+];
+
+const data2 = [
+  { name: dcmsBtn, url: dcmsUrl },
+  { name: canadaBtn, url: canadaUrl },
+];
+
+data.forEach((el) => {
+  el.name.addEventListener("click", (e) => {
+    e.preventDefault();
+    getRss(el.url);
+  });
 });
 
-ccnBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  getRss(ccnUrl);
+data2.forEach((el) => {
+  el.name.addEventListener("click", (e) => {
+    e.preventDefault();
+    getRss2(el.url);
+  });
 });
-
-dcmsBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  getRss2(dcmsUrl);
-});
-
-nukibBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  getRss(nukibUrl);
-});
-
-riaBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  getRss(riaUrl);
-});
-
-cfcsBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  getRss(cfcsUrl);
-});
-
-dnscBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  getRss(dnscUrl);
-});
-
-canadaBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  getRss2(canadaUrl);
-});
-
-ncsnNlBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  getRss(ncscNlUrl);
-});
-
-belgiumBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  getRss(belgiumUrl);
-});
-
-australiaBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  getRss(australiaUrl);
-});
-
-csaBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  getRss(csaUrl);
-});
-
-const url1 =
-  "https://newsapi.org/v2/everything?" +
-  "q=cyber&" +
-  "sortBy=publishedAt&" +
-  "apiKey=f8d4323892124996a20a2ef05f934c89" +
-  "&language=en";
-
-const req1 = new Request(url1);
-
-const getNews = () => {
-  fetch(req1)
-    .then((response) => response.json())
-    .then((data) => {
-      const items = data.articles;
-      let html = ``;
-      items.forEach((el) => {
-        const title = el.title;
-        const link = el.url;
-        const desc = el.description;
-        const img = el.urlToImage;
-
-        html += `
-        <div class="card">
-
-            <div class="card-body">
-                <h5 class="card-title">${title}</h5>
-                <img src="${img}" alt="${title}" class="img-fluid">
-                <p class="card-text">${desc}</p>
-                <a href="${link}" class="btn btn-primary">Read More</a>
-            </div>
-        </div>
-        `;
-      });
-      container.innerHTML = html;
-    });
-};
-
-getNews(req1);
